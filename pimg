@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# pimg - Paste clipboard image from Windows into WSL
+# Saves Windows clipboard image to current directory and outputs the path
+#
+# Usage: pimg [filename]
+# Examples:
+#   pimg              # Saves as img_20260104_143052.png
+#   pimg screenshot   # Saves as screenshot.png
+#   pimg ui-mock.png  # Saves as ui-mock.png
+
+set -e
+
+# Generate filename
+if [ -n "$1" ]; then
+    filename="$1"
+    [[ "$filename" != *.png ]] && filename="${filename}.png"
+else
+    filename="img_$(date +%Y%m%d_%H%M%S).png"
+fi
+
+output_path="$(pwd)/$filename"
+win_path=$(wslpath -w "$output_path")
+
+# PowerShell script to save clipboard image
+ps_script='
+$ErrorActionPreference = "Stop"
+try {
+    Add-Type -AssemblyName System.Windows.Forms
+    $img = [System.Windows.Forms.Clipboard]::GetImage()
+    if ($img -eq $null) {
+        Write-Host "NO_IMAGE"
+        exit 1
+    }
+    $img.Save("'"$win_path"'", [System.Drawing.Imaging.ImageFormat]::Png)
+    Write-Host "SUCCESS"
+} catch {
+    Write-Host "ERROR: $_"
+    exit 1
+}
+'
+
+# Run PowerShell
+result=$(powershell.exe -NoProfile -NonInteractive -Command "$ps_script" 2>&1 | tr -d '\r')
+
+if [[ "$result" == *"NO_IMAGE"* ]]; then
+    echo "Error: No image in clipboard" >&2
+    exit 1
+elif [[ "$result" == *"SUCCESS"* ]] && [ -f "$output_path" ]; then
+    echo "$output_path"
+else
+    echo "Error: $result" >&2
+    exit 1
+fi
