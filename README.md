@@ -27,10 +27,10 @@ Then restart your terminal or run `source ~/.bashrc`.
 /paste-image
 ```
 
-Or with a custom filename:
+Or followed by your prompt:
 
 ```
-/paste-image mockup
+/paste-image use this image as a reference.
 ```
 
 ### Direct CLI
