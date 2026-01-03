@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# pimg - Paste clipboard image from Windows into WSL
+# pimg (Powershell img) - Paste clipboard image from Windows into WSL
 # Saves Windows clipboard image to current directory and outputs the path
 #
 # Usage: pimg [filename]

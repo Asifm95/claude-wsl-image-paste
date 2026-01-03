@@ -2,17 +2,22 @@
 
 Paste Windows clipboard images directly into Claude Code when running in WSL.
 
-## Installation
+## Quick Install
 
 ```bash
-# Extract and install
-unzip clipboard-image-wsl.zip
-cd clipboard-image
-chmod +x install.sh
+git clone https://github.com/Asifm95/claude-wsl-image-paste.git
+cd claude-wsl-image-paste
 ./install.sh
 ```
 
-Then restart your terminal (or run `source ~/.bashrc`).
+Then restart your terminal or run `source ~/.bashrc`.
+
+## What Gets Installed
+
+| Component      | Location              | Purpose                                    |
+| -------------- | --------------------- | ------------------------------------------ |
+| `pimg` CLI     | `~/.local/bin/pimg`   | Saves clipboard image to current directory |
+| `/paste-image` | `~/.claude/commands/` | Claude Code slash command                  |
 
 ## Usage
 
@@ -31,33 +36,31 @@ Or with a custom filename:
 ### Direct CLI
 
 ```bash
-# Auto-named (img_20260104_143052.png)
-pimg
-
-# Custom name
-pimg screenshot
-pimg ui-design.png
+pimg                  # Auto-named: img_20260104_143052.png
+pimg screenshot       # Named: screenshot.png
 ```
 
-## Workflow Example
+## Example Workflow
 
-1. Take a screenshot: `Win + Shift + S`
-2. In Claude Code, type: `/paste-image`
-3. Claude saves the image and asks what you want to do
-4. Say: "Build this UI in React" or "What's wrong with this error?"
+1. **Screenshot**: Press `Win + Shift + S`
+2. **Paste**: Type `/paste-image` in Claude Code
+3. **Ask**: "Build this UI in React" or "What's wrong with this error?"
 
 ## Troubleshooting
 
 **"No image in clipboard"**
-- Copy an image first (Win+Shift+S, or right-click → Copy on any image)
+
+-   Copy an image first (Win+Shift+S, or right-click → Copy on any image)
 
 **"command not found: pimg"**
-- Run `source ~/.bashrc` or restart your terminal
-- Or add `~/.local/bin` to your PATH manually
+
+-   Run `source ~/.bashrc` or restart your terminal
+-   Or add `~/.local/bin` to your PATH manually
 
 **PowerShell errors**
-- Test with: `powershell.exe -Command "echo test"`
-- Make sure WSL can access Windows executables
+
+-   Test with: `powershell.exe -Command "echo test"`
+-   Make sure WSL can access Windows executables
 
 ## How It Works
 
@@ -67,13 +70,9 @@ pimg ui-design.png
 4. Image is saved to your current directory
 5. Claude receives the file path and can work with the image
 
-## Files
+## Uninstall
 
-```
-clipboard-image/
-├── pimg                      # Main script (installs to ~/.local/bin)
-├── commands/
-│   └── paste-image.md        # Slash command (installs to ~/.claude/commands)
-├── install.sh                # Installer
-└── README.md
+```bash
+rm ~/.local/bin/pimg
+rm ~/.claude/commands/paste-image.md
 ```
